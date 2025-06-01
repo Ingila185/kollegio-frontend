@@ -22,9 +22,16 @@ async function getUsers() {
   return mappedUsers;
 }
 
+async function getLogs() {
+  const res = await fetch("http://localhost:3001/logs", { cache: "no-store" });
+  const data = await res.json();
+  console.log("Logs data:", data); // Debugging log
+  return data.logs || [];
+}
+
 export default async function Page() {
   const users = await getUsers();
-  console.log("Users fetched:", users);
+  const logs = await getLogs();
 
   return (
     <SidebarProvider
@@ -41,8 +48,7 @@ export default async function Page() {
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-              <SectionCards />
-
+              <SectionCards data={logs} />
               <DataTable data={users} />
             </div>
           </div>
